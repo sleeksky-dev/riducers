@@ -1,13 +1,14 @@
-# Dynamic Reducers for id based list of objects (server states managed by CRUD REST APIs)
+# Dynamic Reducers for id based entities
 
-Dynamic reducers with insert, delete, replace, clear, and sort actions. Intercept AJAX API calls and dispatch appropriate events to maintain the entity states in redux. 
+Plug and play reducers to frontend entity based RESTful APIs.
 
+These reducers come with insert, delete, replace, clear, and sort action types. Intercept AJAX API calls and dispatch appropriate events to maintain the entity states in redux automagically. 
 
 ## Usage
 
 ### Initializing the reducers
 
-```
+```TypeScript
 import { configureStore } from '@reduxjs/toolkit'
 import { reducerBuilder } from 'riducers'
 import { combineReducers } from 'redux'
@@ -30,4 +31,4 @@ store.dispatch('user/clear', {})
 
 ```
 
-See the Jest tests (teset/main.test.ts) for more action types and uses.
+See the Jest tests (test/main.test.ts) for more action types and uses.
