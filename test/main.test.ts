@@ -2,7 +2,9 @@ import { reducerBuilder } from '../src/index'
 
 test('List reducers', () => {
   const reducer = reducerBuilder('test', {stateType: 'list', keyName: 'key'})
-  let state = reducer(undefined, { type: 'test/insert', payload: [{ key: 3 }] })
+  let state = reducer(undefined, {type: 'foo'});
+  state = reducer(state, { type: 'test/insert', payload: [{ key: 3 }] })
+  console.log('state', state)
   expect(state).toEqual([{ key: 3 }])
 
   state = reducer(state, { type: 'test/insert', payload: { key: 2, foo: 'bar' } });
@@ -51,7 +53,9 @@ test('Reducer initial state', () => {
 
 test('List reducers with sort', () => {
   const reducer = reducerBuilder('test', {stateType: 'list', sort: (a, b) => +b.id - +a.id})
-  let state = reducer(undefined, { type: 'test/insert', payload: [{ id: 3 }] })
+
+  let state = reducer(undefined, {type: 'foo'});
+  state = reducer(state, { type: 'test/insert', payload: [{ id: 3 }] })
   expect(state).toEqual([{ id: 3 }])
 
   state = reducer(state, { type: 'test/insert', payload: { id: 2, foo: 'bar' } });
@@ -76,7 +80,9 @@ test('List reducers with sort', () => {
 // test map reducers
 test('Map reducers', () => {
   const reducer = reducerBuilder('test', {stateType: 'map', keyName: 'key'})
-  let state = reducer(undefined, { type: 'test/insert', payload: [{ key: 3 }] })
+  let state = reducer(undefined, {type: 'foo'});
+
+  state = reducer(state, { type: 'test/insert', payload: [{ key: 3 }] })
   expect(state).toEqual({ 3: { key: 3 } })
 
   state = reducer(state, { type: 'test/insert', payload: { key: 2, foo: 'bar' } });
@@ -101,7 +107,10 @@ test('Map reducers', () => {
 
 test('Map keyName action types', () => {
   const reducer = reducerBuilder('test', {stateType: 'map', keyName: 'key'})
-  let state = reducer(undefined, { type: 'test/insert', payload: { key: 'foo', value: 'bar' } })
+
+  let state = reducer(undefined, { type: 'foo'});
+
+  state = reducer(state, { type: 'test/insert', payload: { key: 'foo', value: 'bar' } })
   expect(state).toEqual({ foo: { key: 'foo', value: 'bar' } })
 
   state = reducer(state, { type: 'test/foo', payload: { value: 'baz' } })
@@ -113,7 +122,9 @@ test('Map keyName action types', () => {
 
 test('Object reducers', () => {
   const reducer = reducerBuilder('test')
-  let state = reducer(undefined, { type: 'test/insert', payload: { id: 3 } })
+  let state = reducer(undefined, { type: 'foo' });
+
+  state = reducer(state, { type: 'test/insert', payload: { id: 3 } })
   expect(state).toEqual({ id: 3 })
 
   state = reducer(state, { type: 'test/replace', payload: { id: 2, foo: 'bar' } });
@@ -129,7 +140,9 @@ test('Object reducers', () => {
 test('Invalid reducers', () => {
   const reducer = reducerBuilder('test')
   console.error = jest.fn();
-  let state = reducer(null, { type: 'test/invalid' })
+  let state = reducer(undefined, { type: 'test/invalid' })
+  
+  state = reducer(state, { type: 'test/invalid' })
   expect(console.error).toHaveBeenCalled();
 })
 
