@@ -130,6 +130,7 @@ interface ReducerOpts {
   stateType?: 'list' | 'map' | 'static';
   sort?: SortFn;
   keyName?: string;
+  initialState?: any;
 }
 
 const OPS = ['insert', 'replace', 'delete', 'clear', 'sort'];
@@ -139,7 +140,7 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
     let isMap = opts && opts?.stateType === 'map';
     let rx = new RegExp(`^${key}/([^\/]+)$`);
     let m = action.type.match(rx);
-    if (!m) return state || (isList ? [] : isMap ? {} : null);
+    if (!m) return state || opts?.initialState !== undefined ? opts?.initialState : (isList ? [] : isMap ? {} : null);
     
     let op = m[1];
     let payload = action.payload;
