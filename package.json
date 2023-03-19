@@ -1,6 +1,6 @@
 {
   "name": "riducers",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Dynamic reducers with insert, delete, replace, clear, and sort actions on 'id' based list of objects",
   "main": "dist/index.js",
   "module": "esm/index.js",
