@@ -178,6 +178,7 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
       else if (isMap) return mapDeleteReducer(state, {payload, keyName});
       return objDeleteReducer();
     } else if (op === "clear") {
+      if (opts && opts?.initialState !== undefined) return opts?.initialState;
       if (isList) return listClearReducer() 
       else if (isMap) return mapClearReducer();
       return objClearReducer();
