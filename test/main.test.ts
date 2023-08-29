@@ -33,6 +33,19 @@ test('List reducers', () => {
   expect(state).toEqual([])
 })
 
+test('List reducer initial state', () => {
+  const reducer1 = reducerBuilder('test', {stateType: 'list', initialState: null})
+  let state1 = reducer1(undefined, {type: 'foo'});
+  state1 = reducer1(state1, { type: 'test/all', payload: [{id: 1}, {id: 2}] });
+
+  const reducer2 = reducerBuilder('test', {stateType: 'list', initialState: []})
+  let state2 = reducer2(undefined, {type: 'foo'});
+  state2 = reducer2(state2, { type: 'test/all', payload: [{id: 1}, {id: 2}] });
+
+  state1 = reducer1(state1, { type: 'test/clear'});
+  expect(state1).toBeNull();
+})
+
 test('Reducer initial state', () => {
   let reducer = reducerBuilder('test', {stateType: 'list', keyName: 'key'})
   let state = reducer(undefined, {type: 'foo'})

@@ -138,6 +138,8 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
   return (state: any, action: { type: string; payload?: any; sort?: (a: ModelObj, b: ModelObj) => number }) => {
     let isList = opts && opts?.stateType === 'list';
     let isMap = opts && opts?.stateType === 'map';
+    let initialState = opts?.initialState;
+
     if (state === undefined) {
       if (opts && opts?.initialState !== undefined) return opts?.initialState;
       else if (isList) return [];
@@ -164,7 +166,7 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
       }
     }
 
-    let sort = action.sort || (opts && opts?.sort);
+    let sort = action.sort ?? opts?.sort;
     if (op === "insert") {
       if (isList && payload) return listInsertReducer(state, {payload, sort, keyName});
       else if (isMap && payload) return mapInsertReducer(state, {payload, keyName});
@@ -178,7 +180,8 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
       else if (isMap) return mapDeleteReducer(state, {payload, keyName});
       return objDeleteReducer();
     } else if (op === "clear") {
-      if (opts && opts?.initialState !== undefined) return opts?.initialState;
+      console.log('initialState', initialState)
+      if (initialState !== undefined) return initialState;
       if (isList) return listClearReducer() 
       else if (isMap) return mapClearReducer();
       return objClearReducer();
