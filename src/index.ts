@@ -141,7 +141,7 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
     let initialState = opts?.initialState;
 
     if (state === undefined) {
-      if (opts && opts?.initialState !== undefined) return opts?.initialState;
+      if (opts?.initialState !== undefined) return opts?.initialState;
       else if (isList) return [];
       else if (isMap) return {};
       else return null;
@@ -152,7 +152,7 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
     
     let op = m[1];
     let payload = action.payload;
-    let keyName = (opts && opts?.keyName) || "id";
+    let keyName = opts?.keyName ?? "id";
 
     if (isMap && !OPS.includes(op)) {
       if (payload && !Array.isArray(payload)) {
@@ -180,7 +180,6 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
       else if (isMap) return mapDeleteReducer(state, {payload, keyName});
       return objDeleteReducer();
     } else if (op === "clear") {
-      console.log('initialState', initialState)
       if (initialState !== undefined) return initialState;
       if (isList) return listClearReducer() 
       else if (isMap) return mapClearReducer();
