@@ -1,10 +1,10 @@
 import { reducerBuilder } from '../src/index'
+import { combineReducers } from 'redux'
 
 test('List reducers', () => {
   const reducer = reducerBuilder('test', {stateType: 'list', keyName: 'key'})
   let state = reducer(undefined, {type: 'foo'});
   state = reducer(state, { type: 'test/insert', payload: [{ key: 3 }] })
-  console.log('state', state)
   expect(state).toEqual([{ key: 3 }])
 
   state = reducer(state, { type: 'test/insert', payload: { key: 2, foo: 'bar' } });
@@ -44,6 +44,18 @@ test('List reducer initial state', () => {
 
   state1 = reducer1(state1, { type: 'test/clear'});
   expect(state1).toBeNull();
+})
+
+test('List with combineReducers', () => {
+  const reducer = combineReducers({
+    test: reducerBuilder('test', {stateType: 'list', initialState: null})
+  })
+  let state = reducer(undefined, {type: 'foo'});
+  state = reducer(state, { type: 'test/insert', payload: [{id: 1}] })
+  state = reducer(state, { type: 'test/clear' })
+  state = reducer(state, { type: 'test/replace', payload: [] })
+  state = reducer(state, { type: 'test/clear' })
+  expect(state).toEqual({test: null})
 })
 
 test('Reducer initial state', () => {
@@ -111,7 +123,6 @@ test('Map reducers', () => {
   expect(state).toEqual({ 3: { key: 3 } })
 
   state = reducer(state, { type: 'test/replace', payload: [{ key: 1 }, { key: 4 }] })
-  console.log(state)
   expect(state).toEqual({ 1: { key: 1 }, 4: { key: 4 } })
 
   state = reducer(state, { type: 'test/clear' })

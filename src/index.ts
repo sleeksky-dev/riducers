@@ -53,10 +53,6 @@ const mapReplaceReducer = (state: ModelObj, action: ListAction) => {
   return state;
 }
 
-const mapClearReducer = () => {
-  return {};
-}
-
 const listInsertReducer = (state: ModelObj[], action: ListAction) => {
   if (!state) state = [];
   let resp: ModelObj[] = Array.isArray(action.payload) ? action.payload : [action.payload];
@@ -99,10 +95,6 @@ const listDeleteReducer = (state: ModelObj[], action: ListAction) => {
   return state;
 }
 
-const listClearReducer = () => {
-  return [];
-}
-
 const listReplaceReducer = (state: ModelObj[], action: ListAction) => {
   let resp: ModelObj[] = Array.isArray(action.payload) ? action.payload : [action.payload];
   resp = resp.map((r: any) => Object.assign({}, r));
@@ -122,10 +114,6 @@ const objDeleteReducer = () => {
   return null
 }
 
-const objClearReducer = () => {
-  return null
-}
-
 interface ReducerOpts {
   stateType?: 'list' | 'map' | 'static';
   sort?: SortFn;
@@ -135,13 +123,19 @@ interface ReducerOpts {
 
 const OPS = ['insert', 'replace', 'delete', 'clear', 'sort'];
 function reducerBuilder(key: string, opts?: ReducerOpts) {
-  return (state: any, action: { type: string; payload?: any; sort?: (a: ModelObj, b: ModelObj) => number }) => {
-    let isList = opts && opts?.stateType === 'list';
-    let isMap = opts && opts?.stateType === 'map';
-    let initialState = opts?.initialState;
+  let initialState = opts?.initialState;
+  let stateType = opts?.stateType ?? 'static';
+  let isList = stateType === 'list';
+  let isMap = stateType === 'map';
+  if (initialState === undefined) {
+    if (isList) initialState = [];
+    else if (isMap) initialState = {};
+    else initialState = null;
+  }
+return (state: any, action: { type: string; payload?: any; sort?: (a: ModelObj, b: ModelObj) => number }) => {
 
     if (state === undefined) {
-      if (opts?.initialState !== undefined) return opts?.initialState;
+      if (initialState !== undefined) return initialState;
       else if (isList) return [];
       else if (isMap) return {};
       else return null;
@@ -180,10 +174,7 @@ function reducerBuilder(key: string, opts?: ReducerOpts) {
       else if (isMap) return mapDeleteReducer(state, {payload, keyName});
       return objDeleteReducer();
     } else if (op === "clear") {
-      if (initialState !== undefined) return initialState;
-      if (isList) return listClearReducer() 
-      else if (isMap) return mapClearReducer();
-      return objClearReducer();
+      return initialState;
     } else if (op === "sort") {
       if (isList) return listSortReducer(state, {sort, keyName});
     } else {
